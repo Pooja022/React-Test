@@ -6,14 +6,10 @@ const { width, height } = Dimensions.get('screen')
 export const DashboardStyle = StyleSheet.create({
 
 	mainContainer:
-		{ justifyContent: 'center', padding: 10 }
-
-	,
+		{ justifyContent: 'center', padding: 10,height:height,marginBottom:10 },
 
 	cardContainer: {
 		marginBottom: 10,
-		paddingHorizontal: 10,
-		paddingVertical: 10,
 		justifyContent: 'center',
 		paddingStart: 10,
 	},
@@ -48,9 +44,8 @@ export const DashboardStyle = StyleSheet.create({
 	},
 
 	productContainerFlatlist: {
-		padding: 10,
 		alignItems: 'center',
-		height: 150
+		height: 200
 	},
 	loaderConatiner:
 		{ position: 'absolute', left: width * 0.5, top: height * 0.4 }

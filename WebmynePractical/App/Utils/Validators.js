@@ -24,7 +24,7 @@ export const isNameValid = value => {
 };
 
 export const printLog = (title, value) => {
-	let isLogEnable = true;
+	let isLogEnable = false;
 	if (isLogEnable) {
 		console.log(title, value);
 	}
