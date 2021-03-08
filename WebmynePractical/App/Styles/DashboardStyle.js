@@ -1,12 +1,13 @@
 import { StyleSheet,Dimensions } from 'react-native';
 import Colors from '../Utils/Colors';
+
 const { width, height } = Dimensions.get('screen')
 
 
 export const DashboardStyle = StyleSheet.create({
 
 	mainContainer:
-		{ justifyContent: 'center', padding: 10,height:height,marginBottom:10 },
+		{ justifyContent: 'center', padding: 10,height:height,marginBottom:10,flex:1 },
 
 	cardContainer: {
 		marginBottom: 10,
@@ -15,7 +16,9 @@ export const DashboardStyle = StyleSheet.create({
 	},
 	title: {
 		color: Colors.black,
-		fontSize: 16,
+		fontSize: 17,
+		fontWeight:'bold',
+		marginVertical:3
 
 	},
 	subcategoryTitle: {
@@ -26,7 +29,9 @@ export const DashboardStyle = StyleSheet.create({
 	},
 	productTitle: {
 		color: Colors.black,
-		fontSize: 12,
+		fontSize: 14,
+		paddingHorizontal:3,
+		
 
 	},
 	image: {
@@ -45,7 +50,13 @@ export const DashboardStyle = StyleSheet.create({
 
 	productContainerFlatlist: {
 		alignItems: 'center',
-		height: 200
+		height: 180,
+		backgroundColor:Colors.white,
+		marginEnd:10,
+		borderRadius:10,
+		width:160,
+		alignItems:'center',
+		paddingVertical:10
 	},
 	loaderConatiner:
 		{ position: 'absolute', left: width * 0.5, top: height * 0.4 }

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, FlatList, Text, Image, ActivityIndicator, Dimensions, Touchable, TouchableOpacity, TextInput } from 'react-native';
+import { View, FlatList, Text, Image, ActivityIndicator, Dimensions, Touchable, TouchableOpacity, TextInput, Button } from 'react-native';
 import { connect } from 'react-redux';
 import * as actions from '../redux/Auth/AuthAction';
 import { DashboardStyle } from "../Styles/DashboardStyle";
@@ -70,17 +70,17 @@ class Dashboard extends Component {
 
 	}
 
-	goToProductDetails = (product)=>{
-		printLog('Dashboard Product====>',product)
-		this.props.navigation.navigate('ProductDetails', { 'product':product});
+	goToProductDetails = (product) => {
+		printLog('Dashboard Product====>', product)
+		this.props.navigation.navigate('ProductDetails', { 'product': product });
 	}
 
 	render() {
 		const { category, storeDetails, isLoading } = this.state
 		return (
 			<View style={DashboardStyle.mainContainer}>
-				<View style={{position: 'absolute', left: width * 0.5, top: height * 0.4 }}>
-					<ActivityIndicator size="large" color="#0000ff" animating={isLoading} hidesWhenStopped />
+				<View style={{ position: 'absolute', left: width * 0.5, top: height * 0.4, zIndex: 1 }}>
+					<ActivityIndicator size="large" color="#0000ff" animating={isLoading} />
 				</View>
 
 				<View style={DashboardStyle.productContainer}>
@@ -102,9 +102,10 @@ class Dashboard extends Component {
 				</View>
 
 				<FlatList
+					contentContainerStyle={{ marginBottom: 20 }}
 					data={category}
 					keyExtractor={(item) => item.categoryID.toString()}
-					renderItem={({ item }) => renderCategory(item,this.goToProductDetails)}
+					renderItem={({ item }) => renderCategory(item, this.goToProductDetails)}
 					onEndReachedThreshold={0.1}
 					onEndReached={this.loadMoreCategory} />
 
@@ -113,7 +114,7 @@ class Dashboard extends Component {
 	}
 }
 
-const renderCategory = (item,goToProductDetails) => {
+const renderCategory = (item, goToProductDetails) => {
 	return (
 		<View style={DashboardStyle.cardContainer}>
 			<Text style={DashboardStyle.title}>{item.name}</Text>
@@ -122,24 +123,35 @@ const renderCategory = (item,goToProductDetails) => {
 				horizontal
 				data={item.product}
 				keyExtractor={(item) => item.ID.toString()}
-				renderItem={({ item }) => renderProduct(item,goToProductDetails)}
+				renderItem={({ item }) => renderProduct(item, goToProductDetails)}
 			/>
 		</View>
 	)
 }
 
 
-const renderProduct = (item,goToProductDetails) => {
+const renderProduct = (item, goToProductDetails) => {
 
 	return (
 		<TouchableOpacity style={DashboardStyle.productContainerFlatlist}
-		onPress={()=>{goToProductDetails(item)}}>
+			onPress={() => { goToProductDetails(item) }}>
+
 			<Image
 				source={
 					{ uri: item.ImageURL }
 				} style={DashboardStyle.image}
 			/>
-			<Text style={DashboardStyle.productTitle}>{item.name}</Text>
+			<Text style={DashboardStyle.productTitle} numberOfLines={1}>{item.name}</Text>
+			<View style={{ flexDirection: 'row', alignItems: 'flex-start' ,marginTop:6}}>
+				<Button
+					title="Add to Cart"
+					color="#841584"
+					accessibilityLabel="Add to Cart"
+				/>
+
+				
+				
+			</View>
 		</TouchableOpacity>
 	)
 }
