@@ -18,7 +18,7 @@ export default class SplashScreen extends Component {
 
 	moveToLogin = () => {
 		setTimeout(()=>{
-			this.props.navigation.navigate('Dashboard');
+			this.props.navigation.navigate('Login');
 		},1000)
 	}
 

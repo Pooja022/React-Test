@@ -1,53 +1,52 @@
 import * as actionType from './ActionType';
 import api from '../../Utils/API';
 import { printLog } from '../../Utils/Validators';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Constant from '../../Utils/Constant';
 
-export const getCategory = data => ({
-	type: actionType.GET_CATEGORY,
+
+
+
+export const doLogin = data => ({
+	type: actionType.LOGIN,
 	payload: api
 		.post('DashBoard', data)
 		.then((res) => {
-			printLog('getCategory', res.data.Result);
-
+			printLog('doLogin', res.data.Result);
 			const responseData = res.data.Result;
+			saveUserData(responseData);
 			return responseData;
 		})
 		.catch(err => {
-			printLog('getCategory Catch', err);
+			printLog('doLogin Catch', err);
 		}),
 });
 
+const saveUserData = (userDetails) => {
+	try {
+		AsyncStorage.setItem(Constant.USER, userDetails)
+	} catch (error) {
+		printLog('Error in AsyncStorage=====>', error)
+	}
+}
 
 
-export const getSubcategory = (data) => ({
-
-	type: actionType.GET_SUBCATEGORY,
+export const getUser = data => ({
+	type: actionType.GET_USER,
 	payload: api
 		.post('DashBoard', data)
 		.then((res) => {
-			printLog('getSubcategory action', res.data);
-
+			printLog('getUser', res.data.Result);
 			const responseData = res.data.Result;
 			return responseData;
 		})
 		.catch(err => {
-			printLog('getSubcategory Catch', err);
+			printLog('getUser Catch', err);
 		}),
 });
 
-export const getSubProducts = (data) => ({
 
-	type: actionType.GET_PRODUCTS,
-	payload: api
-		.post('ProductList', data)
-		.then((res) => {
-			printLog('getSubProducts action', res.data);
 
-			const responseData = res.data.Result;
-			return responseData;
-		})
-		.catch(err => {
-			printLog('getSubProducts Catch', err);
-		}),
-});
+
+
 
