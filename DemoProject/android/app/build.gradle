@@ -129,7 +129,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.demoproject"
+        applicationId "com.demoproject.hello"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

@@ -1,4 +1,4 @@
-package com.demoproject;
+package com.demoproject.hello;
 
 import com.facebook.react.ReactActivity;
 

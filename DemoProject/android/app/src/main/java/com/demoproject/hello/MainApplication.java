@@ -1,7 +1,9 @@
-package com.demoproject;
+package com.demoproject.hello;
 
 import android.app.Application;
 import android.content.Context;
+
+import com.demoproject.hello.BuildConfig;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactInstanceManager;
