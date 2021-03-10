@@ -19,13 +19,17 @@ class Dashboard extends Component {
 			token: '',
 			userObj: {},
 			isLoading: false,
-			totalPage: 1
+			totalPage: 1,
+			isLoadingMore: false,
 		}
 	}
 
 	async componentDidMount() {
 
 		this.getDataFromAsyncStorage();
+		this.setState({
+			isLoading: true
+		})
 		this.getUser();
 	}
 
@@ -42,15 +46,14 @@ class Dashboard extends Component {
 	}
 
 	getUser = () => {
-		this.setState({
-			isLoading: true
-		});
+
 
 		if (this.state.totalPage)
 
 			fetch('http://68.183.48.101:3333/users/list?page=' + this.state.userIndex, {
 				method: "GET",
-				headers: { "Content-type": "application/json", "Authorization": "Bearer " + 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEyODEsImlhdCI6MTYxNTI4MDc5NH0.HeudVJ82Av1LuBpyDK5QXK6Yy3mpm9XV22V_7Hl5-RU' }
+				headers: { "Content-type": "application/json", "Authorization": "Bearer " + token}
+				//'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEyODksImlhdCI6MTYxNTM3OTA1N30.Ea4pfv9xGM0B9Z2EMpLoQOSumXfUWblc9klb3rntWRg' }
 			})
 				.then(response => response.json())
 				.then(json => {
@@ -64,6 +67,7 @@ class Dashboard extends Component {
 					} else if (json.meta.status == 'ok' && json.data.users.length > 0) {
 						this.setState({
 							isLoading: false,
+							isLoadingMore: false,
 							users: this.state.userIndex === 1 ?
 								json.data.users :
 								[...this.state.users, ...json.data.users],
@@ -73,6 +77,7 @@ class Dashboard extends Component {
 						alert('There is no more data to show')
 						this.setState({
 							isLoading: false,
+							isLoadingMore: false,
 						})
 					}
 				})
@@ -87,13 +92,13 @@ class Dashboard extends Component {
 	loadMoreUsers = () => {
 		printLog("LoadMore Subscategory", this.state.userIndex)
 		this.setState({
-			userIndex: this.state.userIndex + 1
+			userIndex: this.state.userIndex + 1,
+			isLoadingMore: true
 		}, () => this.getUser())
-
 	}
 
 	render() {
-		const { users, isLoading } = this.state
+		const { users, isLoading, isLoadingMore } = this.state
 
 		return (
 			<View style={{ flex: 1 }}>
@@ -106,7 +111,7 @@ class Dashboard extends Component {
 					renderItem={({ item }) => renderUser(item)}
 					onEndReachedThreshold={0.1}
 					onEndReached={this.loadMoreUsers} />
-
+				<ActivityIndicator size="large" color="#0000ff" animating={isLoadingMore} />
 
 			</View>
 		)
@@ -122,25 +127,12 @@ const renderUser = (item) => {
 				} style={DashboardStyle.image}
 			/>
 			<View style={{ flexDirection: 'column', marginStart: 20 }}>
-				<Text style={DashboardStyle.productTitle}>{item.username}</Text>
-				<Text style={DashboardStyle.productTitle}>{item.email}</Text>
+				<Text style={DashboardStyle.title}>{item.username}</Text>
+				<Text style={DashboardStyle.subtitle}>{item.email}</Text>
 			</View>
 		</View>
 	)
 }
 
-/* 
-const mapStateToProps = state => ({
-	isLoading: state.auth.isLoading,
-});
 
-const mapDispatchToProps = dispatch => ({
-	getUser: data =>
-		dispatch(actions.getUser(data)),
-
-});
- */
-export default connect(
-	null,
-	null,
-)(Dashboard);
+export default Dashboard;

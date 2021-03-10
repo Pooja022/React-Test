@@ -4,6 +4,7 @@ import {
 	StyleSheet,
 	Text,
 	TextInput,
+	TouchableOpacity,
 	View,
 } from 'react-native';
 import { isEmail, printLog } from '../Utils/Validators';
@@ -12,6 +13,7 @@ import * as actions from '../redux/Auth/AuthAction';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constant from '../Utils/Constant';
 import { StackActions } from '@react-navigation/native';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 
 class Login extends Component {
@@ -22,54 +24,82 @@ class Login extends Component {
 			username: '',
 			password: '',
 			email: '',
-			confirmPassword: ''
+			confirmPassword: '',
+			isEmailValid: true,
+			isPasswordMatch: true,
+			isUserNameValid: true,
+			isPasswordValid: true,
+			isConfirmPassValid: true
 		}
-		this.handleChange = this.handleChange.bind(this);
 	}
 
-	componentDidMount() {
-	}
-
-	handleChange = (name, value) => {
-		printLog(name, value)
-		this.setState = ({
-			[name]: '2312'
-		}, () => {
-			printLog("Username====>", this.state.username)
-
-		});
-	}
 
 	checkValidation = () => {
 		const { username, email, password, confirmPassword } = this.state;
 		if (username === '') {
-			alert('Please enter username.');
+			//alert('Please enter username.');
+			this.setState({
+				isUserNameValid: false
+			});
 			return false;
 		} else if (email === '') {
-			alert('Please enter email.');
+			//alert('Please enter email.');
+			this.setState({
+				isUserNameValid: true,
+				isEmailValid: false
+			});
 			return false;
 		} else if (!isEmail(email)) {
-			alert('Please enter valid email')
+			//alert('Please enter valid email')
+			this.setState({
+				isUserNameValid: true,
+				isEmailValid: false
+			});
 			return false;
 
 		} else if (password === '') {
-			alert('Please enter password.');
+			//alert('Please enter password.');
+			this.setState({
+				isUserNameValid: true,
+				isEmailValid: true,
+				isPasswordValid: false,
+			});
 			return false;
 		} else if (confirmPassword === '') {
-			alert('Please confirm your password.');
+			//alert('Please confirm your password.');
+			this.setState({
+				isUserNameValid: true,
+				isEmailValid: true,
+				isPasswordValid: true,
+				isConfirmPassValid: false
+			});
 			return false;
 		}
 		else if (password !== confirmPassword) {
-			alert('Password and confirm password is not matching');
+			//alert('Password and confirm password is not matching');
+			this.setState({
+				isUserNameValid: true,
+				isEmailValid: true,
+				isPasswordValid: true,
+				isConfirmPassValid: true,
+				isPasswordMatch: false
+			});
 			return false;
 		} else {
+			this.setState({
+				isUserNameValid: true,
+				isEmailValid: true,
+				isPasswordValid: true,
+				isConfirmPassValid: true,
+				isPasswordMatch: true
+			});
 			return true;
 		}
 	}
 
 	onLoginPress = () => {
 		//this.goToDashboard();
-	 	if (this.checkValidation()) {
+		if (this.checkValidation()) {
 			const { username, email, password } = this.state;
 			const logindata = {
 				username: username,
@@ -97,7 +127,7 @@ class Login extends Component {
 				})
 				.catch(err => console.log('Request Failed', err));
 
-		} 
+		}
 	}
 
 	saveUserData = (userDetails, token) => {
@@ -133,8 +163,9 @@ class Login extends Component {
 					numberOfLines={1}
 					maxLength={15}
 					style={styles.textInput}
-
 				/>
+				{!this.state.isUserNameValid && <Text style={styles.validationText}>Please enter username</Text>}
+
 
 				<TextInput
 
@@ -147,6 +178,8 @@ class Login extends Component {
 					keyboardType={'email-address'}
 
 				/>
+				{!this.state.isEmailValid && <Text style={styles.validationText}>Please enter valid email</Text>}
+
 				<TextInput
 					value={password}
 					placeholder={'Password'}
@@ -156,6 +189,8 @@ class Login extends Component {
 					onChangeText={(password) => this.setState({ password })}
 					style={styles.textInput}
 				/>
+				{!this.state.isPasswordValid && <Text style={styles.validationText}>Please enter password</Text>}
+
 				<TextInput
 					value={confirmPassword}
 					placeholder={'ConfirmPassword'}
@@ -165,10 +200,17 @@ class Login extends Component {
 					style={styles.textInput}
 					onChangeText={(confirmPassword) => this.setState({ confirmPassword })}
 				/>
-				<Button
-					title={'Login'}
-					style={{ width: '70%' }}
-					onPress={this.onLoginPress} />
+				{!this.state.isConfirmPassValid && <Text style={styles.validationText}>Please confirm your password</Text>}
+				{!this.state.isPasswordMatch && <Text style={styles.validationText}>Your password is not matching with confirm password. </Text>}
+
+				<TouchableOpacity style={styles.button}
+					onPress={this.onLoginPress}>
+					<Text style={styles.text} >
+						Login
+					</Text>
+				</TouchableOpacity>
+
+
 
 			</View>
 		);
@@ -184,10 +226,11 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 20
 	},
 	welcome: {
-		fontSize: 20,
+		fontSize: 22,
 		textAlign: 'center',
 		margin: 10,
 		color: '#F5FCFF',
+		fontWeight: 'bold'
 	},
 	instructions: {
 		textAlign: 'center',
@@ -199,22 +242,28 @@ const styles = StyleSheet.create({
 		width: '100%',
 		backgroundColor: 'white',
 		borderRadius: 10,
-		marginVertical: 5
+		marginVertical: 7,
+		paddingStart: 10,
 	},
 
+	button: {
+		width: '50%',
+		marginTop: 30,
+		backgroundColor: 'white',
+		borderRadius: 10,
+		alignItems: 'center',
+		height: 40,
+		justifyContent: 'center'
+	},
+	text: {
+		fontSize: 16,
+		textAlign: 'center',
+		fontWeight: 'bold'
+	},
+	validationText: {
+		fontSize: 15,
+		textAlign: 'left',
+	}
 });
 
-const mapStateToProps = state => ({
-	isLoading: state.auth.isLoading,
-});
-
-const mapDispatchToProps = dispatch => ({
-	doLogin: data =>
-		dispatch(actions.doLogin(data)),
-
-});
-
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps,
-)(Login);
+export default Login;
