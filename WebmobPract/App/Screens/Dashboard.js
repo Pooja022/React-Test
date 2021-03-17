@@ -49,7 +49,6 @@ class Dashboard extends Component {
 	}
 
 	getUser = () => {
-		alert(this.state.token)
 
 		if (this.state.totalPage)
 
