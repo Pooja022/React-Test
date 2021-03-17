@@ -5,15 +5,15 @@ import Colors from '../Utils/Colors';
 export const DashboardStyle = StyleSheet.create({
  
   cardContainer: {
-	marginBottom:10,
 	paddingHorizontal:10,
-	paddingVertical:10,
+	paddingVertical:6,
 	alignItems:'center',
 	paddingStart:10,
 	flexDirection:'row',
 	backgroundColor:'white',
 	borderRadius:10,
-	margin:10
+	marginHorizontal:10,
+	marginTop:10
 },
 
 title:{

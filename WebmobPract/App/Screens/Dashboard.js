@@ -1,7 +1,5 @@
 import React, { Component } from "react";
 import { View, FlatList, Text, Image, ActivityIndicator, Dimensions } from 'react-native';
-import { connect } from 'react-redux';
-import * as actions from '../redux/Auth/AuthAction';
 import { DashboardStyle } from "../Styles/DashboardStyle";
 import { printLog } from "../Utils/Validators";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -30,30 +28,34 @@ class Dashboard extends Component {
 		this.setState({
 			isLoading: true
 		})
-		this.getUser();
+
 	}
 
 	getDataFromAsyncStorage = async () => {
 		try {
 			let userObj = JSON.parse(await AsyncStorage.getItem(Constant.USER));
 			let token = JSON.parse(await AsyncStorage.getItem(Constant.TOKEN));
-
+			this.setState({
+				token
+			}, () => {
+				this.getUser();
+			})
 			printLog(userObj, token)
 		} catch (error) {
 			printLog('catch=======>', error);
+			alert('Please try again later')
 
 		}
 	}
 
 	getUser = () => {
-
+		alert(this.state.token)
 
 		if (this.state.totalPage)
 
 			fetch('http://68.183.48.101:3333/users/list?page=' + this.state.userIndex, {
 				method: "GET",
-				headers: { "Content-type": "application/json", "Authorization": "Bearer " + token}
-				//'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEyODksImlhdCI6MTYxNTM3OTA1N30.Ea4pfv9xGM0B9Z2EMpLoQOSumXfUWblc9klb3rntWRg' }
+				headers: { "Content-type": "application/json", "Authorization": `Bearer ${this.state.token}` }
 			})
 				.then(response => response.json())
 				.then(json => {
@@ -63,6 +65,7 @@ class Dashboard extends Component {
 						this.setState({
 							isLoading: false,
 						})
+						this.props.navigation.replace('Login');
 
 					} else if (json.meta.status == 'ok' && json.data.users.length > 0) {
 						this.setState({
@@ -112,7 +115,6 @@ class Dashboard extends Component {
 					onEndReachedThreshold={0.1}
 					onEndReached={this.loadMoreUsers} />
 				<ActivityIndicator size="large" color="#0000ff" animating={isLoadingMore} />
-
 			</View>
 		)
 	}
